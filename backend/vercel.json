@@ -7,7 +7,7 @@
       "config": {
         "includeFiles": ["src/**", "config/**", ".env"],
         "excludeFiles": ["node_modules/**"],
-        "nodeVersion": "18.x"
+        "nodeVersion": "24.x"
       }
     }
   ],
