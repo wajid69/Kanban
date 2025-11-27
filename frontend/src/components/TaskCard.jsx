@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 
 export default React.memo(function TaskCard({ task, onEdit }) {
   const [isEditing, setIsEditing] = useState(false)
+  const [touchStartY, setTouchStartY] = useState(0)
   const setDragging = useUIStore((s) => s.setDragging)
   const del = useDeleteTask()
 
@@ -13,6 +14,12 @@ export default React.memo(function TaskCard({ task, onEdit }) {
     setDragging(task)
     e.dataTransfer.setData('application/json', JSON.stringify({ task }))
     e.dataTransfer.effectAllowed = 'move'
+  }
+
+  // Handle Touch Start
+  function handleTouchStart(e) {
+    setTouchStartY(e.touches[0].clientY)
+    setDragging(task)
   }
   // Handle Delete
   function handleDelete() {
@@ -27,7 +34,12 @@ export default React.memo(function TaskCard({ task, onEdit }) {
     }, 100)
   }
   return (
-    <div draggable onDragStart={handleDragStart} className='border p-3 rounded bg-gray-50 hover:bg-gray-100 cursor-move hover:shadow-md transition-shadow'>
+    <div 
+      draggable 
+      onDragStart={handleDragStart}
+      onTouchStart={handleTouchStart}
+      className='border p-3 rounded bg-gray-50 hover:bg-gray-100 active:bg-blue-100 cursor-move hover:shadow-md transition-shadow touch-none'
+    >
       <div className='flex justify-between items-start'>
         <div className='flex-1'>
           <div className='font-semibold text-gray-800'>{task.title}</div>

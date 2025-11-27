@@ -9,6 +9,7 @@ export default React.memo(function Column({ id, title, tasks, onDrop, onEdit }) 
   // Handle Drag
   function handleDragOver(e) {
     e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
   }
 
   // Handle Drop
@@ -22,8 +23,22 @@ export default React.memo(function Column({ id, title, tasks, onDrop, onEdit }) 
       setDragging(null)
     } catch {}
   }
+
+  // Handle Touch
+  function handleTouchEnd(e) {
+    if (!dragging) return
+    onDrop(dragging, id)
+    setDragging(null)
+  }
   return (
-    <div onDragOver={handleDragOver} onDrop={handleDrop} className='bg-white rounded shadow p-3 min-h-[200px] hover:ring-2 hover:ring-blue-200 transition-all'>
+    <div 
+      onDragOver={handleDragOver} 
+      onDrop={handleDrop}
+      onTouchEnd={handleTouchEnd}
+      className={`bg-white rounded shadow p-3 min-h-[200px] transition-all ${
+        dragging ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:ring-2 hover:ring-blue-200'
+      }`}
+    >
       <h2 className='text-lg font-medium mb-2'>{title}</h2>
       <div className='space-y-2'>
         {tasks.map((task) => (
